@@ -140,7 +140,7 @@ select.form-input { -webkit-appearance:none; }
 .images-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
 .img-thumb { aspect-ratio:1; border-radius:8px; object-fit:cover; width:100%; border:1px solid var(--border); cursor:pointer; }
 .camera-btns { display:flex; gap:8px; }
-.cam-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:var(--radius-sm); border:1px solid var(--primary); background:var(--primary-light); font-size:14px; font-weight:600; color:var(--primary); cursor:pointer; }
+.cam-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:var(--radius-sm); border:1px solid var(--primary); background:var(--primary-light); font-size:14px; font-weight:600; color:var(--primary); cursor:pointer; text-align:center; }
 .cam-btn i { font-size:20px; }
 
 /* ── Action bar ── */
@@ -286,16 +286,15 @@ select.form-input { -webkit-appearance:none; }
         <div class="form-row">
           <div class="images-grid" id="formImagesGrid"></div>
           <div class="camera-btns">
-            <button class="cam-btn" onclick="openCamera()">
+            <label class="cam-btn" for="cameraInput">
               <i class="ti ti-camera"></i> ถ่ายภาพ
-            </button>
-            <button class="cam-btn" onclick="document.getElementById('galleryInput').click()">
+            </label>
+            <label class="cam-btn" for="galleryInput">
               <i class="ti ti-photo"></i> เลือกรูป
-            </button>
+            </label>
           </div>
-          <!-- input แยก: camera ไม่มี multiple, gallery มี multiple -->
-          <input type="file" id="cameraInput" accept="image/*" capture="environment" style="position:absolute;left:-9999px;opacity:0;width:1px;height:1px" onchange="handleImageFile(this)">
-          <input type="file" id="galleryInput" accept="image/*" multiple style="position:absolute;left:-9999px;opacity:0;width:1px;height:1px" onchange="handleImageFile(this)">
+          <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageFile(this)">
+          <input type="file" id="galleryInput" accept="image/*" multiple style="display:none" onchange="handleImageFile(this)">
           <div id="uploadStatus" style="font-size:13px;color:var(--text-3);margin-top:8px;min-height:18px;"></div>
         </div>
       </div>
