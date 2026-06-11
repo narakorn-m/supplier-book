@@ -259,6 +259,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem(GAS_URL_KEY) || DEFAULT_GAS_URL;
   document.getElementById('gasUrl').value = saved;
   if (!localStorage.getItem(GAS_URL_KEY)) localStorage.setItem(GAS_URL_KEY, DEFAULT_GAS_URL);
+
+  // FIX: migrate ข้อมูลจาก cache key เก่า (v1, v2) มาที่ v3
+  const OLD_KEYS = ['supplier_data_cache', 'supplier_cache_v2'];
+  if (!localStorage.getItem(DATA_KEY)) {
+    for (const old of OLD_KEYS) {
+      const oldData = localStorage.getItem(old);
+      if (oldData) {
+        localStorage.setItem(DATA_KEY, oldData);
+        console.log('Migrated data from', old);
+        break;
+      }
+    }
+  }
+
   try { const c = localStorage.getItem(DATA_KEY); if (c) suppliers = JSON.parse(c); } catch(e){}
   renderList();
   loadSuppliers();
@@ -424,6 +438,7 @@ function resetForm() {
   ['fCompany','fContact','fPhone','fEmail','fLine','fAddress','fSubCategory','fPortfolio','fNotes'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('fCategory').value = '';
   document.getElementById('uploadStatus').textContent = '';
+  hideProgress();
   renderKeywords();
   renderFormImages();
 }
@@ -466,7 +481,28 @@ async function saveSupplier() {
   btn.disabled = true;
   btn.innerHTML = '<i class="ti ti-loader-2"></i> กำลังบันทึก…';
 
-  // FIX BUG5: ใช้ driveUrl ถ้ามี ไม่งั้นใช้ dataUrl (base64 local preview)
+  // FIX: upload รูปที่ยังไม่มี driveUrl ก่อน save
+  const pendingImgs = currentImages.filter(x => !x.driveUrl && x.file);
+  if (pendingImgs.length > 0) {
+    showProgress('⬆️ กำลังอัปโหลดรูป 0/' + pendingImgs.length + '…');
+    for (let i = 0; i < pendingImgs.length; i++) {
+      const img = pendingImgs[i];
+      showProgress('⬆️ กำลังอัปโหลดรูป ' + (i+1) + '/' + pendingImgs.length + '…');
+      try {
+        const res = await fetch(getGasUrl(), {
+          method: 'POST',
+          body: JSON.stringify({ action:'uploadImage', base64: img.dataUrl.split(',')[1], mimeType: img.file.type, filename: img.file.name })
+        });
+        const data = await res.json();
+        const found = currentImages.find(x => x.id === img.id);
+        if (found && data.url) found.driveUrl = data.url;
+      } catch(e) { console.warn('upload failed', e); }
+    }
+    hideProgress();
+    renderFormImages();
+  }
+
+  showProgress('💾 กำลังบันทึกข้อมูล…');
   const finalImages = currentImages.map(img => img.driveUrl || img.dataUrl).filter(Boolean);
 
   const isEdit = !!editingId;
@@ -506,6 +542,7 @@ async function saveSupplier() {
     isSaving = false;
     btn.disabled = false;
     btn.innerHTML = '<i class="ti ti-device-floppy"></i> บันทึก';
+    hideProgress();
   }
 
   if (isEdit) { viewingId = savedId; showPage('detail'); renderDetail(viewingId); }
@@ -565,25 +602,13 @@ async function handleImageFile(input) {
   const files = Array.from(input.files);
   for (const file of files) {
     const dataUrl = await fileToBase64(file);
-    // FIX BUG7: ใช้ unique id แทน index เพื่อป้องกัน async race condition
     const uid = 'img_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    currentImages.push({ id: uid, dataUrl, driveUrl: null });
+    // เก็บแค่ preview + file object, ยังไม่ upload
+    currentImages.push({ id: uid, dataUrl, driveUrl: null, file });
     renderFormImages();
-    setUploadStatus('⬆️ กำลังอัปโหลด…');
-    try {
-      const res = await fetch(getGasUrl(), {
-        method: 'POST',
-        body: JSON.stringify({ action:'uploadImage', base64: dataUrl.split(',')[1], mimeType: file.type, filename: file.name })
-      });
-      const data = await res.json();
-      // FIX BUG7: หา image ด้วย uid ไม่ใช่ index
-      const img = currentImages.find(x => x.id === uid);
-      if (img && data.url) { img.driveUrl = data.url; renderFormImages(); setUploadStatus('✅ อัปโหลดสำเร็จ'); }
-      else setUploadStatus('⚠️ อัปโหลดไม่สำเร็จ');
-    } catch(e) { setUploadStatus('⚠️ ไม่มีเน็ต รูปเก็บใน local'); }
   }
   input.value = '';
-  setTimeout(() => setUploadStatus(''), 3000);
+  setUploadStatus(currentImages.filter(x=>!x.driveUrl && x.file).length + ' รูปรอ upload (จะ upload ตอนกด บันทึก)');
 }
 
 function setUploadStatus(msg) { document.getElementById('uploadStatus').textContent = msg; }
@@ -607,6 +632,28 @@ function renderFormImages() {
       <button onclick="removeFormImage(${JSON.stringify(img.id)})" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center">&times;</button>
     </div>`;
   }).join('');
+}
+
+// ── PROGRESS OVERLAY ──────────────────────────
+function showProgress(msg) {
+  let el = document.getElementById('progressOverlay');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'progressOverlay';
+    el.style.cssText = 'position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center';
+    el.innerHTML = '<div style="background:#fff;border-radius:16px;padding:28px 32px;text-align:center;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.2)"><div id="progressSpinner" style="font-size:32px;margin-bottom:12px">⏳</div><div id="progressMsg" style="font-size:15px;font-weight:600;color:#0F172A"></div></div>';
+    document.body.appendChild(el);
+  }
+  el.style.display = 'flex';
+  document.getElementById('progressMsg').textContent = msg;
+  // animate spinner
+  const icons = ['⏳','⌛'];
+  let t = 0;
+  el._spinTimer = setInterval(() => { document.getElementById('progressSpinner').textContent = icons[t++ % 2]; }, 600);
+}
+function hideProgress() {
+  const el = document.getElementById('progressOverlay');
+  if (el) { clearInterval(el._spinTimer); el.style.display = 'none'; }
 }
 
 // ── LIGHTBOX ──────────────────────────────────
