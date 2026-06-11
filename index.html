@@ -471,7 +471,6 @@ function startEdit() {
 function cancelForm() { goBack(); }
 
 async function saveSupplier() {
-  // FIX BUG1+BUG2: ใช้ isSaving lock ป้องกัน double submit
   if (isSaving) return;
   const companyName = document.getElementById('fCompany').value.trim();
   if (!companyName) { showToast('⚠️ กรุณาใส่ชื่อบริษัท'); return; }
@@ -481,85 +480,86 @@ async function saveSupplier() {
   btn.disabled = true;
   btn.innerHTML = '<i class="ti ti-loader-2"></i> กำลังบันทึก…';
 
-  // FIX: upload รูปที่ยังไม่มี driveUrl ก่อน save
-  const pendingImgs = currentImages.filter(x => !x.driveUrl && x.file);
-  if (pendingImgs.length > 0) {
-    showProgress('⬆️ กำลังอัปโหลดรูป 0/' + pendingImgs.length + '…');
+  // snapshot ค่า editingId ทันที ก่อนที่จะถูก reset
+  const wasEditingId = editingId;
+  const isEdit = !!wasEditingId;
+
+  try {
+    // 1) upload รูปที่ยังไม่มี driveUrl
+    const pendingImgs = currentImages.filter(x => !x.driveUrl && x.file);
     for (let i = 0; i < pendingImgs.length; i++) {
       const img = pendingImgs[i];
-      showProgress('⬆️ กำลังอัปโหลดรูป ' + (i+1) + '/' + pendingImgs.length + '…');
+      showProgress('⬆️ อัปโหลดรูป ' + (i+1) + '/' + pendingImgs.length);
       try {
         const res = await fetch(getGasUrl(), {
           method: 'POST',
           body: JSON.stringify({ action:'uploadImage', base64: img.dataUrl.split(',')[1], mimeType: img.file.type, filename: img.file.name })
         });
-        const data = await res.json();
+        const d = await res.json();
         const found = currentImages.find(x => x.id === img.id);
-        if (found && data.url) found.driveUrl = data.url;
-      } catch(e) { console.warn('upload failed', e); }
+        if (found && d.url) found.driveUrl = d.url;
+      } catch(e) { console.warn('upload img failed', e); }
     }
-    hideProgress();
     renderFormImages();
-  }
 
-  showProgress('💾 กำลังบันทึกข้อมูล…');
-  const finalImages = currentImages.map(img => img.driveUrl || img.dataUrl).filter(Boolean);
+    // 2) เก็บข้อมูล
+    showProgress('💾 กำลังบันทึกข้อมูล…');
+    const finalImages = currentImages.map(x => x.driveUrl || x.dataUrl).filter(Boolean);
 
-  const isEdit = !!editingId;
-  const payload = {
-    action: isEdit ? 'update' : 'add',
-    id: editingId || null,
-    companyName,
-    contactName:  document.getElementById('fContact').value.trim(),
-    phone:        document.getElementById('fPhone').value.trim(),
-    email:        document.getElementById('fEmail').value.trim(),
-    lineId:       document.getElementById('fLine').value.trim(),
-    address:      document.getElementById('fAddress').value.trim(),
-    category:     document.getElementById('fCategory').value,
-    subCategory:  document.getElementById('fSubCategory').value.trim(),
-    portfolio:    document.getElementById('fPortfolio').value.trim(),
-    notes:        document.getElementById('fNotes').value.trim(),
-    keywords:     [...currentKeywords],
-    images:       finalImages
-  };
+    const payload = {
+      action: isEdit ? 'update' : 'add',
+      id: wasEditingId || null,
+      companyName,
+      contactName:  document.getElementById('fContact').value.trim(),
+      phone:        document.getElementById('fPhone').value.trim(),
+      email:        document.getElementById('fEmail').value.trim(),
+      lineId:       document.getElementById('fLine').value.trim(),
+      address:      document.getElementById('fAddress').value.trim(),
+      category:     document.getElementById('fCategory').value,
+      subCategory:  document.getElementById('fSubCategory').value.trim(),
+      portfolio:    document.getElementById('fPortfolio').value.trim(),
+      notes:        document.getElementById('fNotes').value.trim(),
+      keywords:     [...currentKeywords],
+      images:       finalImages
+    };
 
-  let savedId = editingId;
-  try {
-    const res = await fetch(getGasUrl(), { method:'POST', body: JSON.stringify(payload) });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    if (!isEdit && data.id) { savedId = data.id; payload.id = data.id; }
-    updateLocal(payload, isEdit);
-    showToast('✅ บันทึกสำเร็จ!');
-  } catch(e) {
-    // FIX BUG3: ถ้า error ก็ยัง reset btn ได้ด้วย finally
-    if (!savedId) savedId = 'L' + Date.now();
-    payload.id = savedId;
-    updateLocal(payload, isEdit);
-    showToast('⚠️ บันทึก offline (sync ภายหลัง)');
+    let savedId = wasEditingId;
+    let toastMsg = '✅ บันทึกสำเร็จ!';
+
+    try {
+      const res = await fetch(getGasUrl(), { method:'POST', body: JSON.stringify(payload) });
+      const d = await res.json();
+      if (d.error) throw new Error(d.error);
+      if (!isEdit && d.id) { savedId = d.id; payload.id = d.id; }
+    } catch(e) {
+      if (!savedId) savedId = 'L' + Date.now();
+      payload.id = savedId;
+      toastMsg = '⚠️ บันทึก offline';
+      console.warn('save failed', e);
+    }
+
+    // 3) บันทึกลง local และแสดง list
+    if (isEdit) {
+      const idx = suppliers.findIndex(s => s.id === savedId);
+      if (idx >= 0) suppliers[idx] = { ...suppliers[idx], ...payload, id: savedId };
+      else suppliers.push({ ...payload, id: savedId });
+    } else {
+      suppliers.push({ ...payload, id: savedId });
+    }
+    localStorage.setItem(DATA_KEY, JSON.stringify(suppliers));
+    renderList();
+    showToast(toastMsg);
+
+    // 4) navigate
+    if (isEdit) { viewingId = savedId; renderDetail(viewingId); showPage('detail'); }
+    else showPage('list');
+
   } finally {
-    // FIX BUG3: finally รัน ไม่ว่า success หรือ error
     isSaving = false;
     btn.disabled = false;
     btn.innerHTML = '<i class="ti ti-device-floppy"></i> บันทึก';
     hideProgress();
   }
-
-  if (isEdit) { viewingId = savedId; showPage('detail'); renderDetail(viewingId); }
-  else showPage('list');
-}
-
-// FIX BUG2: แยก updateLocal ออกมา logic ชัดเจน
-function updateLocal(payload, isEdit) {
-  if (isEdit) {
-    const idx = suppliers.findIndex(s => s.id === payload.id);
-    if (idx >= 0) suppliers[idx] = { ...suppliers[idx], ...payload };
-    else suppliers.push(payload);
-  } else {
-    suppliers.push(payload);
-  }
-  localStorage.setItem(DATA_KEY, JSON.stringify(suppliers));
-  renderList();
 }
 
 async function confirmDelete() {
