@@ -9,217 +9,131 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 :root {
-  --primary: #2563EB;
-  --primary-light: #EFF6FF;
-  --primary-dark: #1D4ED8;
-  --surface: #FFFFFF;
-  --surface-2: #F8FAFC;
-  --surface-3: #F1F5F9;
-  --border: #E2E8F0;
-  --text: #0F172A;
-  --text-2: #475569;
-  --text-3: #94A3B8;
-  --danger: #EF4444;
-  --success: #10B981;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --nav-h: 60px;
-  --top-h: 56px;
+  --primary:#2563EB; --primary-light:#EFF6FF; --primary-dark:#1D4ED8;
+  --surface:#FFFFFF; --surface-2:#F8FAFC; --surface-3:#F1F5F9;
+  --border:#E2E8F0; --text:#0F172A; --text-2:#475569; --text-3:#94A3B8;
+  --danger:#EF4444; --radius:12px; --radius-sm:8px; --nav-h:60px; --top-h:56px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--surface-3); color: var(--text); font-size: 15px; }
-
-/* ── Shell ── */
-#app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
-
-/* ── Topbar ── */
-.topbar {
-  flex-shrink: 0; height: var(--top-h);
-  background: var(--surface); border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; padding: 0 16px; gap: 10px;
-  position: relative; z-index: 10;
-}
-.topbar-title { font-size: 17px; font-weight: 600; flex: 1; }
-.topbar-back {
-  display: none; align-items: center; gap: 4px;
-  color: var(--primary); font-size: 15px; font-weight: 500;
-  background: none; border: none; cursor: pointer; padding: 6px 0;
-}
-.topbar-back i { font-size: 20px; }
-#topbarEditBtn { display:none; background:none; border:none; color:var(--primary); font-size:15px; font-weight:600; cursor:pointer; padding:6px 0; }
-
-/* ── Scroll area ── */
-.scroll-area {
-  flex: 1; overflow-y: auto; overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* ── Pages ── */
-.page { display: none; padding: 16px; max-width: 600px; margin: 0 auto; width: 100%; }
-.page.active { display: block; }
-
-/* ── Bottom nav ── */
-.bottom-nav {
-  flex-shrink: 0; height: var(--nav-h);
-  background: var(--surface); border-top: 1px solid var(--border);
-  display: grid; grid-template-columns: repeat(3,1fr);
-}
-.nav-item {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2px; color: var(--text-3); cursor: pointer; border: none;
-  background: none; font-size: 10px; font-weight: 500;
-}
-.nav-item i { font-size: 22px; }
-.nav-item.active { color: var(--primary); }
-
-/* ── FAB ── */
-.fab {
-  position: fixed; bottom: calc(var(--nav-h) + 14px); right: 20px; z-index: 50;
-  width: 54px; height: 54px; border-radius: 50%;
-  background: var(--primary); color: #fff; border: none;
-  font-size: 26px; cursor: pointer;
-  box-shadow: 0 4px 14px rgba(37,99,235,0.4);
-  display: flex; align-items: center; justify-content: center;
-  transition: transform 0.1s;
-}
-.fab:active { transform: scale(0.93); }
-
-/* ── Search ── */
-.search-wrap { position: relative; margin-bottom: 14px; }
-.search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--text-3); }
-#searchInput { width:100%; padding:10px 12px 10px 38px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); font-size:15px; color:var(--text); outline:none; }
-#searchInput:focus { border-color: var(--primary); }
-
-/* ── Filter chips ── */
-.filter-bar { display:flex; gap:8px; overflow-x:auto; margin-bottom:14px; padding-bottom:2px; scrollbar-width:none; }
-.filter-bar::-webkit-scrollbar { display:none; }
-.chip { flex-shrink:0; padding:5px 14px; border-radius:20px; border:1px solid var(--border); background:var(--surface); font-size:13px; font-weight:500; color:var(--text-2); cursor:pointer; white-space:nowrap; }
-.chip.active { background:var(--primary); border-color:var(--primary); color:#fff; }
-
-/* ── Stats ── */
-.stats-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
-.stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px; text-align:center; }
-.stat-num { font-size:22px; font-weight:700; color:var(--primary); }
-.stat-label { font-size:11px; color:var(--text-3); margin-top:2px; }
-
-/* ── Supplier cards ── */
-.supplier-list { display:flex; flex-direction:column; gap:10px; padding-bottom:80px; }
-.supplier-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; cursor:pointer; display:flex; align-items:center; gap:14px; transition:transform 0.1s; }
-.supplier-card:active { transform:scale(0.98); }
-.supplier-avatar { width:46px; height:46px; border-radius:50%; background:var(--primary-light); color:var(--primary); font-size:17px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; }
-.supplier-avatar img { width:100%; height:100%; object-fit:cover; }
-.supplier-info { flex:1; min-width:0; }
-.supplier-name { font-weight:600; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.supplier-contact { font-size:13px; color:var(--text-2); margin-top:2px; }
-.supplier-cat { display:inline-block; margin-top:5px; background:var(--surface-2); border:1px solid var(--border); border-radius:6px; padding:2px 8px; font-size:12px; color:var(--text-2); }
-.kw-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; }
-.kw-tag { background:var(--primary-light); color:var(--primary); border-radius:4px; padding:1px 7px; font-size:11px; font-weight:500; }
-
-/* ── Form ── */
-.form-section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:14px; overflow:hidden; }
-.form-section-title { padding:10px 16px; font-size:12px; font-weight:700; color:var(--text-3); background:var(--surface-2); border-bottom:1px solid var(--border); text-transform:uppercase; letter-spacing:.04em; }
-.form-row { padding:12px 16px; border-bottom:1px solid var(--border); }
-.form-row:last-child { border-bottom:none; }
-.form-label { font-size:11px; font-weight:700; color:var(--text-3); margin-bottom:5px; text-transform:uppercase; letter-spacing:.03em; }
-.form-input { width:100%; border:none; outline:none; font-size:15px; color:var(--text); background:transparent; font-family:inherit; }
-.form-input::placeholder { color:var(--text-3); }
-textarea.form-input { resize:none; min-height:56px; line-height:1.5; }
-select.form-input { -webkit-appearance:none; }
-
-/* ── Keywords ── */
-.keywords-wrap { display:flex; flex-wrap:wrap; gap:6px; min-height:28px; }
-.kw-badge { display:flex; align-items:center; gap:4px; background:var(--primary-light); color:var(--primary); border-radius:6px; padding:3px 8px 3px 10px; font-size:13px; font-weight:500; }
-.kw-badge button { background:none; border:none; cursor:pointer; color:var(--primary); font-size:16px; padding:0 2px; line-height:1; }
-.kw-input-wrap { display:flex; gap:8px; margin-top:8px; }
-.kw-input-wrap input { flex:1; border:1px solid var(--border); border-radius:var(--radius-sm); padding:7px 12px; font-size:14px; outline:none; }
-.kw-input-wrap input:focus { border-color:var(--primary); }
-.kw-input-wrap button { background:var(--primary); color:#fff; border:none; border-radius:var(--radius-sm); padding:7px 14px; font-size:14px; font-weight:500; cursor:pointer; }
-
-/* ── Images in form ── */
-.images-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
-.img-thumb { aspect-ratio:1; border-radius:8px; object-fit:cover; width:100%; border:1px solid var(--border); cursor:pointer; }
-.camera-btns { display:flex; gap:8px; }
-.cam-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:var(--radius-sm); border:1px solid var(--primary); background:var(--primary-light); font-size:14px; font-weight:600; color:var(--primary); cursor:pointer; text-align:center; }
-.cam-btn i { font-size:20px; }
-
-/* ── Action bar ── */
-.action-bar { background:var(--surface); border-top:1px solid var(--border); padding:12px 16px; display:flex; gap:10px; margin:0 -16px; }
-.btn { flex:1; padding:13px; border-radius:var(--radius); font-size:15px; font-weight:600; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; }
-.btn-primary { background:var(--primary); color:#fff; }
-.btn-primary:active { background:var(--primary-dark); }
-.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text-2); }
-.btn-danger { background:#FEF2F2; color:var(--danger); border:1px solid #FECACA; }
-
-/* ── Detail ── */
-.detail-header { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; text-align:center; margin-bottom:14px; }
-.detail-avatar { width:68px; height:68px; border-radius:50%; background:var(--primary-light); color:var(--primary); font-size:24px; font-weight:700; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
-.detail-avatar img { width:100%; height:100%; object-fit:cover; }
-.detail-name { font-size:20px; font-weight:700; }
-.detail-cat { font-size:13px; color:var(--text-2); margin-top:4px; }
-.detail-section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:14px; overflow:hidden; }
-.detail-section-title { padding:9px 16px; font-size:11px; font-weight:700; color:var(--text-3); background:var(--surface-2); border-bottom:1px solid var(--border); text-transform:uppercase; letter-spacing:.05em; }
-.detail-row { padding:12px 16px; display:flex; align-items:flex-start; border-bottom:1px solid var(--border); gap:12px; }
-.detail-row:last-child { border-bottom:none; }
-.detail-row-icon { color:var(--text-3); font-size:18px; flex-shrink:0; margin-top:1px; }
-.detail-row-content { flex:1; min-width:0; }
-.detail-row-label { font-size:11px; color:var(--text-3); text-transform:uppercase; letter-spacing:.04em; margin-bottom:2px; }
-.detail-row-value { font-size:15px; color:var(--text); word-break:break-word; }
-.detail-row-value a { color:var(--primary); text-decoration:none; }
-.images-scroll { display:flex; gap:8px; overflow-x:auto; padding:12px 16px; scrollbar-width:none; }
-.images-scroll::-webkit-scrollbar { display:none; }
-.images-scroll img { width:110px; height:110px; object-fit:cover; border-radius:8px; flex-shrink:0; border:1px solid var(--border); cursor:pointer; }
-.detail-bottom-pad { height: 80px; }
-
-/* ── Config ── */
-.config-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; }
-.config-card label { font-size:13px; font-weight:600; color:var(--text-2); display:block; margin-bottom:7px; }
-.config-card input { width:100%; border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; font-size:13px; outline:none; font-family:monospace; }
-.config-card input:focus { border-color:var(--primary); }
-.config-notice { background:#FFF7ED; border:1px solid #FED7AA; border-radius:var(--radius-sm); padding:12px 14px; font-size:13px; color:#92400E; line-height:1.6; margin-top:12px; }
-.config-bottom-pad { height:80px; }
-
-/* ── Empty / loader ── */
-.empty { text-align:center; padding:52px 20px; }
-.empty i { font-size:48px; color:var(--text-3); display:block; margin-bottom:12px; }
-.empty h3 { font-size:16px; color:var(--text-2); margin-bottom:6px; }
-.empty p { font-size:13px; color:var(--text-3); }
-
-/* ── Toast ── */
-.toast { position:fixed; bottom:calc(var(--nav-h) + 12px); left:50%; transform:translateX(-50%) translateY(20px); background:#1E293B; color:#fff; border-radius:24px; padding:9px 20px; font-size:14px; font-weight:500; opacity:0; transition:all .25s; pointer-events:none; white-space:nowrap; z-index:999; }
-.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-
-/* ── Lightbox ── */
-.lightbox { display:none; position:fixed; inset:0; z-index:500; background:rgba(0,0,0,.88); align-items:center; justify-content:center; }
-.lightbox.open { display:flex; }
-.lightbox img { max-width:96vw; max-height:88vh; border-radius:8px; object-fit:contain; }
-.lightbox-close { position:absolute; top:16px; right:16px; color:#fff; font-size:28px; cursor:pointer; background:rgba(0,0,0,.4); border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--surface-3);color:var(--text);font-size:15px}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+.topbar{flex-shrink:0;height:var(--top-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;z-index:10}
+.topbar-title{font-size:17px;font-weight:600;flex:1}
+.topbar-back{display:none;align-items:center;gap:4px;color:var(--primary);font-size:15px;font-weight:500;background:none;border:none;cursor:pointer;padding:6px 0}
+.topbar-back i{font-size:20px}
+#topbarEditBtn{display:none;background:none;border:none;color:var(--primary);font-size:15px;font-weight:600;cursor:pointer;padding:6px 0}
+.scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.page{display:none;padding:16px;max-width:600px;margin:0 auto;width:100%}
+.page.active{display:block}
+.bottom-nav{flex-shrink:0;height:var(--nav-h);background:var(--surface);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr)}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--text-3);cursor:pointer;border:none;background:none;font-size:10px;font-weight:500}
+.nav-item i{font-size:22px}
+.nav-item.active{color:var(--primary)}
+.fab{position:fixed;bottom:calc(var(--nav-h) + 14px);right:20px;z-index:50;width:54px;height:54px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,.4);display:flex;align-items:center;justify-content:center;transition:transform .1s}
+.fab:active{transform:scale(.93)}
+.search-wrap{position:relative;margin-bottom:14px}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--text-3)}
+#searchInput{width:100%;padding:10px 12px 10px 38px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);font-size:15px;color:var(--text);outline:none}
+#searchInput:focus{border-color:var(--primary)}
+.filter-bar{display:flex;gap:8px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px;scrollbar-width:none}
+.filter-bar::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:500;color:var(--text-2);cursor:pointer;white-space:nowrap}
+.chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;text-align:center}
+.stat-num{font-size:22px;font-weight:700;color:var(--primary)}
+.stat-label{font-size:11px;color:var(--text-3);margin-top:2px}
+.supplier-list{display:flex;flex-direction:column;gap:10px;padding-bottom:80px}
+.supplier-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:transform .1s}
+.supplier-card:active{transform:scale(.98)}
+.supplier-avatar{width:46px;height:46px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.supplier-avatar img{width:100%;height:100%;object-fit:cover}
+.supplier-info{flex:1;min-width:0}
+.supplier-name{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.supplier-contact{font-size:13px;color:var(--text-2);margin-top:2px}
+.supplier-cat{display:inline-block;margin-top:5px;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:12px;color:var(--text-2)}
+.kw-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.kw-tag{background:var(--primary-light);color:var(--primary);border-radius:4px;padding:1px 7px;font-size:11px;font-weight:500}
+.form-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden}
+.form-section-title{padding:10px 16px;font-size:12px;font-weight:700;color:var(--text-3);background:var(--surface-2);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.04em}
+.form-row{padding:12px 16px;border-bottom:1px solid var(--border)}
+.form-row:last-child{border-bottom:none}
+.form-label{font-size:11px;font-weight:700;color:var(--text-3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.03em}
+.form-input{width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;font-family:inherit}
+.form-input::placeholder{color:var(--text-3)}
+textarea.form-input{resize:none;min-height:56px;line-height:1.5}
+select.form-input{-webkit-appearance:none}
+.keywords-wrap{display:flex;flex-wrap:wrap;gap:6px;min-height:28px}
+.kw-badge{display:inline-flex;align-items:center;gap:4px;background:var(--primary-light);color:var(--primary);border-radius:6px;padding:3px 8px 3px 10px;font-size:13px;font-weight:500}
+.kw-badge .kw-del{background:none;border:none;cursor:pointer;color:var(--primary);font-size:16px;padding:0 2px;line-height:1}
+.kw-input-wrap{display:flex;gap:8px;margin-top:8px}
+.kw-input-wrap input{flex:1;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;font-size:14px;outline:none}
+.kw-input-wrap input:focus{border-color:var(--primary)}
+.kw-input-wrap button{background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);padding:7px 14px;font-size:14px;font-weight:500;cursor:pointer}
+.images-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.img-thumb{aspect-ratio:1;border-radius:8px;object-fit:cover;width:100%;border:1px solid var(--border);cursor:pointer;display:block}
+.camera-btns{display:flex;gap:8px}
+.cam-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;border-radius:var(--radius-sm);border:1px solid var(--primary);background:var(--primary-light);font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;text-align:center}
+.cam-btn i{font-size:20px}
+.action-bar{background:var(--surface);border-top:1px solid var(--border);padding:12px 16px;display:flex;gap:10px;margin:0 -16px}
+.btn{flex:1;padding:13px;border-radius:var(--radius);font-size:15px;font-weight:600;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:not(:disabled):active{background:var(--primary-dark)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-2)}
+.btn-danger{background:#FEF2F2;color:var(--danger);border:1px solid #FECACA}
+.detail-header{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:14px}
+.detail-avatar{width:68px;height:68px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-size:24px;font-weight:700;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.detail-avatar img{width:100%;height:100%;object-fit:cover}
+.detail-name{font-size:20px;font-weight:700}
+.detail-cat{font-size:13px;color:var(--text-2);margin-top:4px}
+.detail-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden}
+.detail-section-title{padding:9px 16px;font-size:11px;font-weight:700;color:var(--text-3);background:var(--surface-2);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.05em}
+.detail-row{padding:12px 16px;display:flex;align-items:flex-start;border-bottom:1px solid var(--border);gap:12px}
+.detail-row:last-child{border-bottom:none}
+.detail-row-icon{color:var(--text-3);font-size:18px;flex-shrink:0;margin-top:1px}
+.detail-row-content{flex:1;min-width:0}
+.detail-row-label{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.detail-row-value{font-size:15px;color:var(--text);word-break:break-word}
+.detail-row-value a{color:var(--primary);text-decoration:none}
+.images-scroll{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;scrollbar-width:none}
+.images-scroll::-webkit-scrollbar{display:none}
+.images-scroll img{width:110px;height:110px;object-fit:cover;border-radius:8px;flex-shrink:0;border:1px solid var(--border);cursor:pointer}
+.config-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.config-card label{font-size:13px;font-weight:600;color:var(--text-2);display:block;margin-bottom:7px}
+.config-card input{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;outline:none;font-family:monospace}
+.config-card input:focus{border-color:var(--primary)}
+.config-notice{background:#FFF7ED;border:1px solid #FED7AA;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:#92400E;line-height:1.6;margin-top:12px}
+.empty{text-align:center;padding:52px 20px}
+.empty i{font-size:48px;color:var(--text-3);display:block;margin-bottom:12px}
+.empty h3{font-size:16px;color:var(--text-2);margin-bottom:6px}
+.empty p{font-size:13px;color:var(--text-3)}
+.toast{position:fixed;bottom:calc(var(--nav-h) + 12px);left:50%;transform:translateX(-50%) translateY(20px);background:#1E293B;color:#fff;border-radius:24px;padding:9px 20px;font-size:14px;font-weight:500;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:999}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.lightbox{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.88);align-items:center;justify-content:center}
+.lightbox.open{display:flex}
+.lightbox img{max-width:96vw;max-height:88vh;border-radius:8px;object-fit:contain}
+.lightbox-close{position:absolute;top:16px;right:16px;color:#fff;font-size:28px;cursor:pointer;background:rgba(0,0,0,.4);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
 <div id="app">
-
-  <!-- Topbar -->
   <div class="topbar">
-    <button class="topbar-back" id="backBtn" onclick="goBack()">
-      <i class="ti ti-chevron-left"></i> กลับ
-    </button>
+    <button class="topbar-back" id="backBtn" onclick="goBack()"><i class="ti ti-chevron-left"></i> กลับ</button>
     <div class="topbar-title" id="topbarTitle">📒 Supplier Book</div>
     <button id="topbarEditBtn" onclick="startEdit()">แก้ไข</button>
   </div>
 
-  <!-- Scroll area -->
   <div class="scroll-area" id="scrollArea">
 
-    <!-- PAGE: LIST -->
+    <!-- LIST -->
     <div id="pageList" class="page active">
       <div class="search-wrap">
         <i class="ti ti-search"></i>
-        <input id="searchInput" type="search" placeholder="ค้นหาชื่อ, keyword, หมวดหมู่…" oninput="filterSuppliers()">
+        <input id="searchInput" type="search" placeholder="ค้นหาชื่อ, keyword, หมวดหมู่…" oninput="renderList()">
       </div>
-      <div class="filter-bar" id="filterBar">
-        <div class="chip active" onclick="setFilter(this,'')">ทั้งหมด</div>
-      </div>
+      <div class="filter-bar" id="filterBar"><div class="chip active" onclick="setFilter(this,'')">ทั้งหมด</div></div>
       <div class="stats-bar">
         <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Supplier</div></div>
         <div class="stat-card"><div class="stat-num" id="statCat">0</div><div class="stat-label">หมวดหมู่</div></div>
@@ -228,18 +142,18 @@ select.form-input { -webkit-appearance:none; }
       <div id="supplierList" class="supplier-list"></div>
     </div>
 
-    <!-- PAGE: DETAIL -->
+    <!-- DETAIL -->
     <div id="pageDetail" class="page">
       <div id="detailContent"></div>
-      <div class="detail-bottom-pad"></div>
+      <div style="height:80px"></div>
     </div>
 
-    <!-- PAGE: FORM -->
+    <!-- FORM -->
     <div id="pageForm" class="page">
       <div class="form-section">
         <div class="form-section-title">ข้อมูลบริษัท</div>
-        <div class="form-row"><div class="form-label">ชื่อบริษัท / ร้านค้า *</div><input class="form-input" id="fCompany" placeholder="เช่น บริษัท ABC จำกัด" type="text"></div>
-        <div class="form-row"><div class="form-label">ชื่อผู้ติดต่อ</div><input class="form-input" id="fContact" placeholder="เช่น คุณสมชาย" type="text"></div>
+        <div class="form-row"><div class="form-label">ชื่อบริษัท / ร้านค้า *</div><input class="form-input" id="fCompany" type="text" placeholder="เช่น บริษัท ABC จำกัด"></div>
+        <div class="form-row"><div class="form-label">ชื่อผู้ติดต่อ</div><input class="form-input" id="fContact" type="text" placeholder="เช่น คุณสมชาย"></div>
         <div class="form-row">
           <div class="form-label">หมวดหมู่</div>
           <select class="form-input" id="fCategory">
@@ -249,17 +163,15 @@ select.form-input { -webkit-appearance:none; }
             <option>บริการซ่อมบำรุง</option><option>เทคโนโลยี / IT</option><option>อื่นๆ</option>
           </select>
         </div>
-        <div class="form-row"><div class="form-label">หมวดหมู่ย่อย</div><input class="form-input" id="fSubCategory" placeholder="เช่น กระเบื้อง, หลังคา…" type="text"></div>
+        <div class="form-row"><div class="form-label">หมวดหมู่ย่อย</div><input class="form-input" id="fSubCategory" type="text" placeholder="เช่น กระเบื้อง, หลังคา…"></div>
       </div>
-
       <div class="form-section">
         <div class="form-section-title">ช่องทางติดต่อ</div>
-        <div class="form-row"><div class="form-label">เบอร์โทร</div><input class="form-input" id="fPhone" placeholder="0xx-xxx-xxxx" type="tel"></div>
-        <div class="form-row"><div class="form-label">อีเมล</div><input class="form-input" id="fEmail" placeholder="example@email.com" type="email"></div>
-        <div class="form-row"><div class="form-label">LINE ID</div><input class="form-input" id="fLine" placeholder="@lineid" type="text"></div>
-        <div class="form-row"><div class="form-label">ที่อยู่</div><textarea class="form-input" id="fAddress" placeholder="ที่อยู่สำนักงาน / หน้าร้าน" rows="2"></textarea></div>
+        <div class="form-row"><div class="form-label">เบอร์โทร</div><input class="form-input" id="fPhone" type="tel" placeholder="0xx-xxx-xxxx"></div>
+        <div class="form-row"><div class="form-label">อีเมล</div><input class="form-input" id="fEmail" type="email" placeholder="example@email.com"></div>
+        <div class="form-row"><div class="form-label">LINE ID</div><input class="form-input" id="fLine" type="text" placeholder="@lineid"></div>
+        <div class="form-row"><div class="form-label">ที่อยู่</div><textarea class="form-input" id="fAddress" rows="2" placeholder="ที่อยู่สำนักงาน / หน้าร้าน"></textarea></div>
       </div>
-
       <div class="form-section">
         <div class="form-section-title">Keywords (สำหรับค้นหา)</div>
         <div class="form-row">
@@ -270,245 +182,175 @@ select.form-input { -webkit-appearance:none; }
           </div>
         </div>
       </div>
-
       <div class="form-section">
         <div class="form-section-title">ผลงาน / Portfolio</div>
-        <div class="form-row"><textarea class="form-input" id="fPortfolio" placeholder="เว็บไซต์, ลิงก์ผลงาน…" rows="3"></textarea></div>
+        <div class="form-row"><textarea class="form-input" id="fPortfolio" rows="3" placeholder="เว็บไซต์, ลิงก์ผลงาน…"></textarea></div>
       </div>
-
       <div class="form-section">
         <div class="form-section-title">หมายเหตุ</div>
-        <div class="form-row"><textarea class="form-input" id="fNotes" placeholder="ข้อมูลเพิ่มเติม…" rows="3"></textarea></div>
+        <div class="form-row"><textarea class="form-input" id="fNotes" rows="3" placeholder="ข้อมูลเพิ่มเติม…"></textarea></div>
       </div>
-
       <div class="form-section">
         <div class="form-section-title">รูปภาพ (นามบัตร, ผลงาน)</div>
         <div class="form-row">
           <div class="images-grid" id="formImagesGrid"></div>
           <div class="camera-btns">
-            <label class="cam-btn" for="cameraInput">
-              <i class="ti ti-camera"></i> ถ่ายภาพ
-            </label>
-            <label class="cam-btn" for="galleryInput">
-              <i class="ti ti-photo"></i> เลือกรูป
-            </label>
+            <label class="cam-btn" for="cameraInput"><i class="ti ti-camera"></i> ถ่ายภาพ</label>
+            <label class="cam-btn" for="galleryInput"><i class="ti ti-photo"></i> เลือกรูป</label>
           </div>
           <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageFile(this)">
           <input type="file" id="galleryInput" accept="image/*" multiple style="display:none" onchange="handleImageFile(this)">
-          <div id="uploadStatus" style="font-size:13px;color:var(--text-3);margin-top:8px;min-height:18px;"></div>
+          <div id="uploadStatus" style="font-size:13px;color:var(--text-3);margin-top:8px;min-height:18px"></div>
         </div>
       </div>
-
       <div class="action-bar">
         <button class="btn btn-outline" onclick="cancelForm()">ยกเลิก</button>
-        <button class="btn btn-primary" id="saveBtn" onclick="saveSupplier()">
-          <i class="ti ti-device-floppy"></i> บันทึก
-        </button>
+        <button class="btn btn-primary" id="saveBtn" onclick="saveSupplier()"><i class="ti ti-device-floppy"></i> บันทึก</button>
       </div>
       <div style="height:72px"></div>
     </div>
 
-    <!-- PAGE: CONFIG -->
+    <!-- CONFIG -->
     <div id="pageConfig" class="page">
       <div class="config-card">
         <label>Google Apps Script URL</label>
         <input type="url" id="gasUrl" placeholder="https://script.google.com/macros/s/.../exec" oninput="saveConfig()">
-        <div style="margin-top:10px;display:flex;gap:8px;">
+        <div style="margin-top:10px;display:flex;gap:8px">
           <button class="btn btn-outline" style="flex:1;padding:10px" onclick="testConnection()"><i class="ti ti-wifi"></i> ทดสอบ</button>
           <button class="btn btn-outline" style="flex:1;padding:10px" onclick="loadSuppliers()"><i class="ti ti-refresh"></i> โหลดข้อมูล</button>
         </div>
-        <div class="config-notice" style="margin-top:12px">
-          <strong>URL ที่ตั้งค่าไว้จะใช้งานได้ทุกเครื่อง</strong> — ข้อมูลเก็บใน Google Drive ของคุณ
-        </div>
+        <div class="config-notice" style="margin-top:12px"><strong>ข้อมูลเก็บใน Google Drive</strong> — ทุกเครื่องเห็นข้อมูลเดียวกัน</div>
       </div>
-      <div class="config-bottom-pad"></div>
+      <div style="height:80px"></div>
     </div>
 
-  </div><!-- end scroll-area -->
+  </div><!-- scroll-area -->
 
-  <!-- Bottom nav -->
   <div class="bottom-nav">
     <button class="nav-item active" id="navList" onclick="showPage('list')"><i class="ti ti-building-store"></i>รายชื่อ</button>
     <button class="nav-item" id="navSearch" onclick="focusSearch()"><i class="ti ti-search"></i>ค้นหา</button>
     <button class="nav-item" id="navConfig" onclick="showPage('config')"><i class="ti ti-settings"></i>ตั้งค่า</button>
   </div>
-
-</div><!-- end app -->
-
-<!-- FAB -->
-<button class="fab" id="fab" onclick="showAddForm()" aria-label="เพิ่ม Supplier">
-  <i class="ti ti-plus"></i>
-</button>
-
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <div class="lightbox-close"><i class="ti ti-x"></i></div>
-  <img id="lightboxImg" src="" alt="">
 </div>
 
-<!-- Toast -->
+<button class="fab" id="fab" onclick="showAddForm()"><i class="ti ti-plus"></i></button>
+<div class="lightbox" id="lightbox" onclick="closeLightbox()"><div class="lightbox-close"><i class="ti ti-x"></i></div><img id="lightboxImg" src="" alt=""></div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════
-// CONFIG — URL ฝังไว้เลย ไม่ต้องตั้งค่าทุกเครื่อง
-// ══════════════════════════════════════════════
+// ── CONFIG ────────────────────────────────────
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxAW-UoAU3a_R3aOQuwrl3UIeqXb3mZhyDsL6NjkVun4APizUgNsM_NBHSIkZfIvwG-/exec';
-const DATA_KEY = 'supplier_cache_v2';
+const DATA_KEY = 'supplier_cache_v3';
 const GAS_URL_KEY = 'supplier_gas_url';
 
-// ══════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════
+// ── STATE ─────────────────────────────────────
 let suppliers = [];
 let currentKeywords = [];
-let currentImages = [];  // { dataUrl, driveUrl|null }
+let currentImages = []; // [{id, dataUrl, driveUrl}]
 let editingId = null;
 let activeFilter = '';
 let currentPage = 'list';
 let prevPage = 'list';
 let viewingId = null;
+let isSaving = false; // FIX: global save lock
 
-// ══════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════
+// ── INIT ──────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem(GAS_URL_KEY) || DEFAULT_GAS_URL;
   document.getElementById('gasUrl').value = saved;
-  if (!localStorage.getItem(GAS_URL_KEY)) {
-    localStorage.setItem(GAS_URL_KEY, DEFAULT_GAS_URL);
-  }
-  const cached = localStorage.getItem(DATA_KEY);
-  if (cached) { try { suppliers = JSON.parse(cached); renderList(); } catch(e){} }
+  if (!localStorage.getItem(GAS_URL_KEY)) localStorage.setItem(GAS_URL_KEY, DEFAULT_GAS_URL);
+  try { const c = localStorage.getItem(DATA_KEY); if (c) suppliers = JSON.parse(c); } catch(e){}
+  renderList();
   loadSuppliers();
 });
 
-function getGasUrl() {
-  return localStorage.getItem(GAS_URL_KEY) || DEFAULT_GAS_URL;
-}
+function getGasUrl() { return localStorage.getItem(GAS_URL_KEY) || DEFAULT_GAS_URL; }
+function saveConfig() { localStorage.setItem(GAS_URL_KEY, document.getElementById('gasUrl').value.trim() || DEFAULT_GAS_URL); }
 
-// ══════════════════════════════════════════════
-// CONFIG PAGE
-// ══════════════════════════════════════════════
-function saveConfig() {
-  const url = document.getElementById('gasUrl').value.trim();
-  localStorage.setItem(GAS_URL_KEY, url || DEFAULT_GAS_URL);
+// ── NETWORK ───────────────────────────────────
+async function loadSuppliers() {
+  try {
+    const res = await fetch(getGasUrl() + '?action=getAll');
+    const data = await res.json();
+    if (Array.isArray(data.suppliers)) {
+      suppliers = data.suppliers;
+      localStorage.setItem(DATA_KEY, JSON.stringify(suppliers));
+      renderList();
+    }
+  } catch(e) { console.warn('offline'); }
 }
 
 async function testConnection() {
   showToast('กำลังทดสอบ…');
   try {
     const res = await fetch(getGasUrl() + '?action=getAll');
-    const data = await res.json();
-    if (data.suppliers !== undefined) {
-      showToast('✅ เชื่อมต่อสำเร็จ! พบ ' + data.suppliers.length + ' รายการ');
-    } else showToast('⚠️ Response ผิดรูปแบบ');
+    const d = await res.json();
+    showToast(d.suppliers !== undefined ? '✅ เชื่อมต่อสำเร็จ! พบ ' + d.suppliers.length + ' รายการ' : '⚠️ Response ผิดรูปแบบ');
   } catch(e) { showToast('❌ เชื่อมต่อไม่ได้'); }
 }
 
-// ══════════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════════
+// ── NAVIGATION ────────────────────────────────
 function showPage(name) {
-  ['list','detail','form','config'].forEach(p => {
-    document.getElementById('page'+cap(p)).classList.remove('active');
-  });
+  ['list','detail','form','config'].forEach(p => document.getElementById('page'+cap(p)).classList.remove('active'));
   document.getElementById('page'+cap(name)).classList.add('active');
   document.getElementById('scrollArea').scrollTop = 0;
 
-  const back = document.getElementById('backBtn');
-  const title = document.getElementById('topbarTitle');
-  const editBtn = document.getElementById('topbarEditBtn');
-  const fab = document.getElementById('fab');
-
-  back.style.display = ['detail','form'].includes(name) ? 'flex' : 'none';
-  editBtn.style.display = name === 'detail' ? 'block' : 'none';
-  fab.style.display = ['list','config'].includes(name) ? 'flex' : 'none';
-
+  document.getElementById('backBtn').style.display = ['detail','form'].includes(name) ? 'flex' : 'none';
+  document.getElementById('topbarEditBtn').style.display = name === 'detail' ? 'block' : 'none';
+  document.getElementById('fab').style.display = ['list','config'].includes(name) ? 'flex' : 'none';
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  if (name === 'list')   { document.getElementById('navList').classList.add('active'); title.textContent = '📒 Supplier Book'; }
-  if (name === 'config') { document.getElementById('navConfig').classList.add('active'); title.textContent = '⚙️ ตั้งค่า'; }
-  if (name === 'form')   title.textContent = editingId ? 'แก้ไข Supplier' : 'เพิ่ม Supplier';
-  if (name === 'detail') title.textContent = 'รายละเอียด';
+
+  const titles = {list:'📒 Supplier Book', config:'⚙️ ตั้งค่า', form: editingId ? 'แก้ไข Supplier' : 'เพิ่ม Supplier', detail:'รายละเอียด'};
+  document.getElementById('topbarTitle').textContent = titles[name] || '';
+  if (name === 'list') document.getElementById('navList').classList.add('active');
+  if (name === 'config') document.getElementById('navConfig').classList.add('active');
 
   prevPage = currentPage;
   currentPage = name;
 }
 
 function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-
 function goBack() {
   if (currentPage === 'form' && prevPage === 'detail') { showPage('detail'); renderDetail(viewingId); }
-  else if (currentPage === 'detail') showPage('list');
-  else showPage('list');
+  else showPage(currentPage === 'detail' ? 'list' : 'list');
 }
+function focusSearch() { showPage('list'); setTimeout(() => document.getElementById('searchInput').focus(), 100); }
 
-function focusSearch() {
-  showPage('list');
-  setTimeout(() => document.getElementById('searchInput').focus(), 100);
-}
-
-// ══════════════════════════════════════════════
-// LOAD DATA
-// ══════════════════════════════════════════════
-async function loadSuppliers() {
-  try {
-    const res = await fetch(getGasUrl() + '?action=getAll');
-    const data = await res.json();
-    if (data.suppliers) {
-      suppliers = data.suppliers;
-      localStorage.setItem(DATA_KEY, JSON.stringify(suppliers));
-      renderList();
-    }
-  } catch(e) { console.warn('Offline:', e.message); }
-}
-
-// ══════════════════════════════════════════════
-// RENDER LIST
-// ══════════════════════════════════════════════
+// ── RENDER LIST ───────────────────────────────
 function renderList() {
   const q = (document.getElementById('searchInput').value || '').toLowerCase();
   const filtered = suppliers.filter(s => {
     const mf = !activeFilter || s.category === activeFilter;
-    const mq = !q ||
-      (s.companyName||'').toLowerCase().includes(q) ||
-      (s.contactName||'').toLowerCase().includes(q) ||
-      (s.category||'').toLowerCase().includes(q) ||
-      (s.keywords||[]).some(k => k.toLowerCase().includes(q));
+    const mq = !q || [s.companyName, s.contactName, s.category, ...(s.keywords||[])].some(v => (v||'').toLowerCase().includes(q));
     return mf && mq;
   });
 
   const cats = new Set(suppliers.map(s=>s.category).filter(Boolean));
-  const kws  = new Set(suppliers.flatMap(s=>s.keywords||[]));
+  const allKws = new Set(suppliers.flatMap(s=>s.keywords||[]));
   document.getElementById('statTotal').textContent = suppliers.length;
-  document.getElementById('statCat').textContent   = cats.size;
-  document.getElementById('statKw').textContent    = kws.size;
+  document.getElementById('statCat').textContent = cats.size;
+  document.getElementById('statKw').textContent = allKws.size;
 
   const bar = document.getElementById('filterBar');
   bar.innerHTML = `<div class="chip ${!activeFilter?'active':''}" onclick="setFilter(this,'')">ทั้งหมด</div>`;
-  [...cats].forEach(c => {
-    bar.innerHTML += `<div class="chip ${activeFilter===c?'active':''}" onclick="setFilter(this,'${c}')">${c}</div>`;
-  });
+  [...cats].forEach(c => bar.innerHTML += `<div class="chip ${activeFilter===c?'active':''}" onclick="setFilter(this,${JSON.stringify(c)})">${esc(c)}</div>`);
 
   const el = document.getElementById('supplierList');
   if (!filtered.length) {
-    el.innerHTML = `<div class="empty"><i class="ti ti-building-store"></i><h3>${suppliers.length===0?'ยังไม่มี Supplier':'ไม่พบผลลัพธ์'}</h3><p>${suppliers.length===0?'กด + เพื่อเพิ่มรายการแรก':'ลองค้นหาด้วยคำอื่น'}</p></div>`;
+    el.innerHTML = `<div class="empty"><i class="ti ti-building-store"></i><h3>${suppliers.length?'ไม่พบผลลัพธ์':'ยังไม่มี Supplier'}</h3><p>${suppliers.length?'ลองค้นหาด้วยคำอื่น':'กด + เพื่อเพิ่มรายการแรก'}</p></div>`;
     return;
   }
   el.innerHTML = filtered.map(s => {
     const init = (s.companyName||'?').substring(0,2).toUpperCase();
-    const imgs = s.images||[];
-    const firstImg = imgs[0] || '';
-    const avatarInner = firstImg
-      ? `<img src="${firstImg}" onerror="this.style.display='none'" alt="">`
-      : init;
-    const kws = (s.keywords||[]).slice(0,3).map(k=>`<span class="kw-tag">${escHtml(k)}</span>`).join('');
-    return `<div class="supplier-card" onclick="viewSupplier('${s.id}')">
-      <div class="supplier-avatar">${avatarInner}</div>
+    const img0 = (s.images||[])[0]||'';
+    const avatar = img0 ? `<img src="${img0}" onerror="this.style.display='none'" alt="">` : init;
+    const kws = (s.keywords||[]).slice(0,3).map(k=>`<span class="kw-tag">${esc(k)}</span>`).join('');
+    return `<div class="supplier-card" onclick="viewSupplier(${JSON.stringify(s.id)})">
+      <div class="supplier-avatar">${avatar}</div>
       <div class="supplier-info">
-        <div class="supplier-name">${escHtml(s.companyName||'(ไม่ระบุ)')}</div>
-        <div class="supplier-contact">${escHtml([s.contactName,s.phone].filter(Boolean).join(' · ')||'ยังไม่มีข้อมูลติดต่อ')}</div>
-        ${s.category?`<span class="supplier-cat">${escHtml(s.category)}${s.subCategory?' / '+escHtml(s.subCategory):''}</span>`:''}
+        <div class="supplier-name">${esc(s.companyName||'(ไม่ระบุ)')}</div>
+        <div class="supplier-contact">${esc([s.contactName,s.phone].filter(Boolean).join(' · ')||'ยังไม่มีข้อมูลติดต่อ')}</div>
+        ${s.category?`<span class="supplier-cat">${esc(s.category)}${s.subCategory?' / '+esc(s.subCategory):''}</span>`:''}
         ${kws?`<div class="kw-tags">${kws}</div>`:''}
       </div>
       <i class="ti ti-chevron-right" style="color:var(--text-3);font-size:20px;flex-shrink:0"></i>
@@ -522,98 +364,115 @@ function setFilter(el, val) {
   el.classList.add('active');
   renderList();
 }
-function filterSuppliers() { renderList(); }
 
-// ══════════════════════════════════════════════
-// DETAIL
-// ══════════════════════════════════════════════
-function viewSupplier(id) {
-  viewingId = id;
-  renderDetail(id);
-  showPage('detail');
-}
+// ── DETAIL ────────────────────────────────────
+function viewSupplier(id) { viewingId = id; renderDetail(id); showPage('detail'); }
 
 function renderDetail(id) {
   const s = suppliers.find(s=>s.id===id);
   if (!s) return;
   const init = (s.companyName||'?').substring(0,2).toUpperCase();
   const imgs = s.images||[];
-  const avatarInner = imgs[0] ? `<img src="${imgs[0]}" onerror="this.style.display='none'" alt="">` : init;
-  const kws = (s.keywords||[]).map(k=>`<span class="kw-tag" style="font-size:13px;padding:3px 10px">${escHtml(k)}</span>`).join('');
-  const imgHtml = imgs.map(u=>`<img src="${u}" onclick="openLightbox('${u}')" alt="" onerror="this.style.opacity='.3'">`).join('');
+  const avatar = imgs[0] ? `<img src="${imgs[0]}" onerror="this.style.display='none'" alt="">` : init;
+  const kws = (s.keywords||[]).map(k=>`<span class="kw-tag" style="font-size:13px;padding:3px 10px">${esc(k)}</span>`).join('');
+  const imgHtml = imgs.map(u=>`<img src="${u}" onclick="openLightbox(this.src)" onerror="this.style.opacity='.3'" alt="">`).join('');
 
   document.getElementById('detailContent').innerHTML = `
     <div class="detail-header">
-      <div class="detail-avatar">${avatarInner}</div>
-      <div class="detail-name">${escHtml(s.companyName||'(ไม่ระบุ)')}</div>
-      <div class="detail-cat">${escHtml([s.category,s.subCategory].filter(Boolean).join(' › ')||'ไม่ระบุหมวดหมู่')}</div>
+      <div class="detail-avatar">${avatar}</div>
+      <div class="detail-name">${esc(s.companyName||'(ไม่ระบุ)')}</div>
+      <div class="detail-cat">${esc([s.category,s.subCategory].filter(Boolean).join(' › ')||'ไม่ระบุหมวดหมู่')}</div>
     </div>
-    ${(s.phone||s.email||s.lineId||s.address||s.contactName)?`
-    <div class="detail-section">
-      <div class="detail-section-title">ช่องทางติดต่อ</div>
-      ${s.contactName?`<div class="detail-row"><i class="ti ti-user detail-row-icon"></i><div class="detail-row-content"><div class="detail-row-label">ผู้ติดต่อ</div><div class="detail-row-value">${escHtml(s.contactName)}</div></div></div>`:''}
-      ${s.phone?`<div class="detail-row"><i class="ti ti-phone detail-row-icon"></i><div class="detail-row-content"><div class="detail-row-label">โทร</div><div class="detail-row-value"><a href="tel:${s.phone}">${escHtml(s.phone)}</a></div></div></div>`:''}
-      ${s.email?`<div class="detail-row"><i class="ti ti-mail detail-row-icon"></i><div class="detail-row-content"><div class="detail-row-label">อีเมล</div><div class="detail-row-value"><a href="mailto:${s.email}">${escHtml(s.email)}</a></div></div></div>`:''}
-      ${s.lineId?`<div class="detail-row"><i class="ti ti-brand-line detail-row-icon" style="color:#06C755"></i><div class="detail-row-content"><div class="detail-row-label">LINE</div><div class="detail-row-value">${escHtml(s.lineId)}</div></div></div>`:''}
-      ${s.address?`<div class="detail-row"><i class="ti ti-map-pin detail-row-icon"></i><div class="detail-row-content"><div class="detail-row-label">ที่อยู่</div><div class="detail-row-value">${escHtml(s.address)}</div></div></div>`:''}
+    ${(s.contactName||s.phone||s.email||s.lineId||s.address)?`
+    <div class="detail-section"><div class="detail-section-title">ช่องทางติดต่อ</div>
+      ${row('ti-user','ผู้ติดต่อ',s.contactName)}
+      ${row('ti-phone','โทร',s.phone?`<a href="tel:${s.phone}">${esc(s.phone)}</a>`:'')}
+      ${row('ti-mail','อีเมล',s.email?`<a href="mailto:${s.email}">${esc(s.email)}</a>`:'')}
+      ${row('ti-brand-line','LINE',s.lineId,'color:#06C755')}
+      ${row('ti-map-pin','ที่อยู่',s.address)}
     </div>`:''}
     ${kws?`<div class="detail-section"><div class="detail-section-title">Keywords</div><div class="detail-row"><div class="kw-tags" style="gap:6px">${kws}</div></div></div>`:''}
-    ${s.portfolio?`<div class="detail-section"><div class="detail-section-title">Portfolio</div><div class="detail-row"><i class="ti ti-link detail-row-icon"></i><div class="detail-row-content"><div class="detail-row-value" style="white-space:pre-wrap">${escHtml(s.portfolio)}</div></div></div></div>`:''}
-    ${s.notes?`<div class="detail-section"><div class="detail-section-title">หมายเหตุ</div><div class="detail-row"><i class="ti ti-notes detail-row-icon"></i><div class="detail-row-content"><div class="detail-row-value" style="white-space:pre-wrap">${escHtml(s.notes)}</div></div></div></div>`:''}
+    ${row2('ti-link','Portfolio',s.portfolio)}
+    ${row2('ti-notes','หมายเหตุ',s.notes)}
     ${imgHtml?`<div class="detail-section"><div class="detail-section-title">รูปภาพ (${imgs.length})</div><div class="images-scroll">${imgHtml}</div></div>`:''}
-    <div class="action-bar" style="position:relative;margin:0 -16px">
+    <div class="action-bar" style="margin:0 -16px">
       <button class="btn btn-danger" onclick="confirmDelete()"><i class="ti ti-trash"></i> ลบ</button>
       <button class="btn btn-primary" onclick="startEdit()"><i class="ti ti-edit"></i> แก้ไข</button>
     </div>`;
 }
 
-// ══════════════════════════════════════════════
-// FORM
-// ══════════════════════════════════════════════
-function showAddForm() {
-  editingId = null; currentKeywords = []; currentImages = [];
-  ['fCompany','fContact','fPhone','fEmail','fLine','fAddress','fSubCategory','fPortfolio','fNotes'].forEach(id=>{ document.getElementById(id).value=''; });
-  document.getElementById('fCategory').value = '';
-  renderKeywords(); renderFormImages();
-  showPage('form');
+function row(icon, label, val, iconStyle='') {
+  if (!val) return '';
+  const v = typeof val === 'string' ? esc(val) : val;
+  return `<div class="detail-row"><i class="ti ${icon} detail-row-icon" ${iconStyle?`style="${iconStyle}"`:''} ></i><div class="detail-row-content"><div class="detail-row-label">${label}</div><div class="detail-row-value">${v}</div></div></div>`;
 }
+function row2(icon, label, val) {
+  if (!val) return '';
+  return `<div class="detail-section"><div class="detail-section-title">${label}</div><div class="detail-row"><i class="ti ${icon} detail-row-icon"></i><div class="detail-row-content"><div class="detail-row-value" style="white-space:pre-wrap">${esc(val)}</div></div></div></div>`;
+}
+
+// ── FORM ──────────────────────────────────────
+function resetForm() {
+  // FIX BUG6: reset saveBtn state ทุกครั้งที่เปิด form ใหม่
+  editingId = null;
+  currentKeywords = [];
+  currentImages = [];
+  isSaving = false;
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ti ti-device-floppy"></i> บันทึก';
+  ['fCompany','fContact','fPhone','fEmail','fLine','fAddress','fSubCategory','fPortfolio','fNotes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fCategory').value = '';
+  document.getElementById('uploadStatus').textContent = '';
+  renderKeywords();
+  renderFormImages();
+}
+
+function showAddForm() { resetForm(); showPage('form'); }
 
 function startEdit() {
   const s = suppliers.find(s=>s.id===viewingId);
   if (!s) return;
+  resetForm();
   editingId = s.id;
   currentKeywords = [...(s.keywords||[])];
-  currentImages = (s.images||[]).map(u=>({ dataUrl: u, driveUrl: u }));
-  document.getElementById('fCompany').value = s.companyName||'';
-  document.getElementById('fContact').value = s.contactName||'';
-  document.getElementById('fPhone').value   = s.phone||'';
-  document.getElementById('fEmail').value   = s.email||'';
-  document.getElementById('fLine').value    = s.lineId||'';
-  document.getElementById('fAddress').value = s.address||'';
-  document.getElementById('fCategory').value    = s.category||'';
-  document.getElementById('fSubCategory').value = s.subCategory||'';
-  document.getElementById('fPortfolio').value   = s.portfolio||'';
-  document.getElementById('fNotes').value       = s.notes||'';
-  renderKeywords(); renderFormImages();
+  // FIX BUG5: เก็บ driveUrl แยกจาก dataUrl ชัดเจน
+  currentImages = (s.images||[]).map((u,i) => ({ id: 'existing_'+i, dataUrl: u, driveUrl: u }));
+  document.getElementById('fCompany').value    = s.companyName||'';
+  document.getElementById('fContact').value    = s.contactName||'';
+  document.getElementById('fPhone').value      = s.phone||'';
+  document.getElementById('fEmail').value      = s.email||'';
+  document.getElementById('fLine').value       = s.lineId||'';
+  document.getElementById('fAddress').value    = s.address||'';
+  document.getElementById('fCategory').value   = s.category||'';
+  document.getElementById('fSubCategory').value= s.subCategory||'';
+  document.getElementById('fPortfolio').value  = s.portfolio||'';
+  document.getElementById('fNotes').value      = s.notes||'';
+  renderKeywords();
+  renderFormImages();
   showPage('form');
 }
 
 function cancelForm() { goBack(); }
 
 async function saveSupplier() {
+  // FIX BUG1+BUG2: ใช้ isSaving lock ป้องกัน double submit
+  if (isSaving) return;
   const companyName = document.getElementById('fCompany').value.trim();
   if (!companyName) { showToast('⚠️ กรุณาใส่ชื่อบริษัท'); return; }
 
+  isSaving = true;
   const btn = document.getElementById('saveBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="ti ti-loader-2"></i> กำลังบันทึก…';
 
-  // collect final image URLs (prefer driveUrl, fallback to dataUrl)
-  const finalImages = currentImages.map(img => img.driveUrl || img.dataUrl);
+  // FIX BUG5: ใช้ driveUrl ถ้ามี ไม่งั้นใช้ dataUrl (base64 local preview)
+  const finalImages = currentImages.map(img => img.driveUrl || img.dataUrl).filter(Boolean);
 
+  const isEdit = !!editingId;
   const payload = {
-    action: editingId ? 'update' : 'add',
-    id: editingId,
+    action: isEdit ? 'update' : 'add',
+    id: editingId || null,
     companyName,
     contactName:  document.getElementById('fContact').value.trim(),
     phone:        document.getElementById('fPhone').value.trim(),
@@ -624,107 +483,103 @@ async function saveSupplier() {
     subCategory:  document.getElementById('fSubCategory').value.trim(),
     portfolio:    document.getElementById('fPortfolio').value.trim(),
     notes:        document.getElementById('fNotes').value.trim(),
-    keywords:     currentKeywords,
+    keywords:     [...currentKeywords],
     images:       finalImages
   };
 
+  let savedId = editingId;
   try {
     const res = await fetch(getGasUrl(), { method:'POST', body: JSON.stringify(payload) });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
-    if (!editingId && data.id) payload.id = data.id;
-    saveLocal(payload);
+    if (!isEdit && data.id) { savedId = data.id; payload.id = data.id; }
+    updateLocal(payload, isEdit);
     showToast('✅ บันทึกสำเร็จ!');
   } catch(e) {
-    payload.id = payload.id || 'L'+Date.now();
-    saveLocal(payload);
-    showToast('⚠️ บันทึก offline');
+    // FIX BUG3: ถ้า error ก็ยัง reset btn ได้ด้วย finally
+    if (!savedId) savedId = 'L' + Date.now();
+    payload.id = savedId;
+    updateLocal(payload, isEdit);
+    showToast('⚠️ บันทึก offline (sync ภายหลัง)');
+  } finally {
+    // FIX BUG3: finally รัน ไม่ว่า success หรือ error
+    isSaving = false;
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-device-floppy"></i> บันทึก';
   }
 
-  btn.disabled = false;
-  btn.innerHTML = '<i class="ti ti-device-floppy"></i> บันทึก';
-
-  if (editingId) { viewingId = editingId; showPage('detail'); renderDetail(viewingId); }
+  if (isEdit) { viewingId = savedId; showPage('detail'); renderDetail(viewingId); }
   else showPage('list');
 }
 
-function saveLocal(payload) {
-  if (payload.action === 'update' || editingId) {
-    const idx = suppliers.findIndex(s=>s.id===payload.id);
-    if (idx >= 0) suppliers[idx] = {...suppliers[idx], ...payload};
+// FIX BUG2: แยก updateLocal ออกมา logic ชัดเจน
+function updateLocal(payload, isEdit) {
+  if (isEdit) {
+    const idx = suppliers.findIndex(s => s.id === payload.id);
+    if (idx >= 0) suppliers[idx] = { ...suppliers[idx], ...payload };
     else suppliers.push(payload);
-  } else { suppliers.push(payload); }
+  } else {
+    suppliers.push(payload);
+  }
   localStorage.setItem(DATA_KEY, JSON.stringify(suppliers));
   renderList();
 }
 
 async function confirmDelete() {
   const s = suppliers.find(s=>s.id===viewingId);
-  if (!confirm(`ลบ "${s?.companyName}" ออกจากรายการ?`)) return;
-  try {
-    await fetch(getGasUrl(), { method:'POST', body: JSON.stringify({ action:'delete', id:viewingId }) });
-  } catch(e){}
+  if (!confirm(`ลบ "${s?.companyName||'รายการนี้'}" ออกจากรายการ?`)) return;
+  try { await fetch(getGasUrl(), { method:'POST', body: JSON.stringify({ action:'delete', id:viewingId }) }); } catch(e){}
   suppliers = suppliers.filter(s=>s.id!==viewingId);
   localStorage.setItem(DATA_KEY, JSON.stringify(suppliers));
-  renderList(); showPage('list'); showToast('🗑️ ลบแล้ว');
+  renderList();
+  showPage('list');
+  showToast('🗑️ ลบแล้ว');
 }
 
-// ══════════════════════════════════════════════
-// KEYWORDS
-// ══════════════════════════════════════════════
+// ── KEYWORDS ──────────────────────────────────
 function addKeyword() {
   const inp = document.getElementById('kwInput');
   const val = inp.value.trim();
-  if (!val || currentKeywords.includes(val)) { inp.value=''; return; }
-  currentKeywords.push(val); inp.value=''; renderKeywords();
+  if (!val || currentKeywords.includes(val)) { inp.value = ''; return; }
+  currentKeywords.push(val);
+  inp.value = '';
+  renderKeywords();
 }
-function removeKeyword(kw) { currentKeywords = currentKeywords.filter(k=>k!==kw); renderKeywords(); }
+
+// FIX BUG4: ใช้ data-index แทน onclick string เพื่อป้องกัน special chars
 function renderKeywords() {
-  document.getElementById('keywordsWrap').innerHTML = currentKeywords
-    .map(k=>`<span class="kw-badge">${escHtml(k)}<button onclick="removeKeyword('${k}')" aria-label="ลบ">&times;</button></span>`)
-    .join('');
+  const wrap = document.getElementById('keywordsWrap');
+  wrap.innerHTML = currentKeywords.map((k,i) =>
+    `<span class="kw-badge">${esc(k)}<button class="kw-del" data-i="${i}" aria-label="ลบ">&times;</button></span>`
+  ).join('');
+  wrap.querySelectorAll('.kw-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentKeywords.splice(parseInt(btn.dataset.i), 1);
+      renderKeywords();
+    });
+  });
 }
 
-// ══════════════════════════════════════════════
-// CAMERA — สร้าง input ใหม่ทุกครั้งเพื่อบังคับเปิดกล้อง
-// ══════════════════════════════════════════════
-function openCamera() {
-  // ลบ input เก่าออกก่อน แล้วสร้างใหม่ทุกครั้ง
-  const old = document.getElementById('cameraInput');
-  if (old) old.remove();
-  const inp = document.createElement('input');
-  inp.type = 'file';
-  inp.id = 'cameraInput';
-  inp.accept = 'image/*';
-  inp.setAttribute('capture', 'environment');
-  inp.style.cssText = 'position:absolute;left:-9999px;opacity:0;width:1px;height:1px';
-  inp.onchange = function() { handleImageFile(this); };
-  document.body.appendChild(inp);
-  inp.click();
-}
-
-
+// ── IMAGES ────────────────────────────────────
 async function handleImageFile(input) {
   const files = Array.from(input.files);
   for (const file of files) {
     const dataUrl = await fileToBase64(file);
-    const idx = currentImages.length;
-    currentImages.push({ dataUrl, driveUrl: null });
+    // FIX BUG7: ใช้ unique id แทน index เพื่อป้องกัน async race condition
+    const uid = 'img_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    currentImages.push({ id: uid, dataUrl, driveUrl: null });
     renderFormImages();
-    setUploadStatus(`⬆️ กำลังอัปโหลดรูปที่ ${idx+1}…`);
-
+    setUploadStatus('⬆️ กำลังอัปโหลด…');
     try {
-      const pureB64 = dataUrl.split(',')[1];
       const res = await fetch(getGasUrl(), {
         method: 'POST',
-        body: JSON.stringify({ action:'uploadImage', base64:pureB64, mimeType:file.type, filename:file.name })
+        body: JSON.stringify({ action:'uploadImage', base64: dataUrl.split(',')[1], mimeType: file.type, filename: file.name })
       });
       const data = await res.json();
-      if (data.url) {
-        currentImages[idx].driveUrl = data.url;
-        renderFormImages();
-        setUploadStatus('✅ อัปโหลดสำเร็จ');
-      } else { setUploadStatus('⚠️ อัปโหลดไม่สำเร็จ รูปจะเก็บแค่ใน local'); }
+      // FIX BUG7: หา image ด้วย uid ไม่ใช่ index
+      const img = currentImages.find(x => x.id === uid);
+      if (img && data.url) { img.driveUrl = data.url; renderFormImages(); setUploadStatus('✅ อัปโหลดสำเร็จ'); }
+      else setUploadStatus('⚠️ อัปโหลดไม่สำเร็จ');
     } catch(e) { setUploadStatus('⚠️ ไม่มีเน็ต รูปเก็บใน local'); }
   }
   input.value = '';
@@ -732,51 +587,42 @@ async function handleImageFile(input) {
 }
 
 function setUploadStatus(msg) { document.getElementById('uploadStatus').textContent = msg; }
-
 function fileToBase64(file) {
-  return new Promise((res,rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result);
-    r.onerror = () => rej(new Error('Read failed'));
-    r.readAsDataURL(file);
-  });
+  return new Promise((res,rej) => { const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=()=>rej(new Error('fail')); r.readAsDataURL(file); });
 }
 
-function removeFormImage(idx) { currentImages.splice(idx,1); renderFormImages(); }
+function removeFormImage(uid) {
+  currentImages = currentImages.filter(x => x.id !== uid);
+  renderFormImages();
+}
 
+// FIX BUG5: renderFormImages ใช้ uid แทน index ใน onclick
 function renderFormImages() {
-  document.getElementById('formImagesGrid').innerHTML = currentImages.map((img,i) => {
+  document.getElementById('formImagesGrid').innerHTML = currentImages.map(img => {
     const src = img.dataUrl || img.driveUrl;
-    const uploading = img.driveUrl ? '' : '<div style="position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,.6);color:#fff;border-radius:4px;font-size:10px;padding:2px 5px">⬆️</div>';
-    return `<div style="position:relative">
-      <img src="${src}" class="img-thumb" onclick="openLightbox('${src}')" alt="">
-      ${uploading}
-      <button onclick="removeFormImage(${i})" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center">&times;</button>
+    const badge = img.driveUrl ? '' : '<div style="position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,.6);color:#fff;border-radius:4px;font-size:10px;padding:2px 5px">⬆️</div>';
+    return `<div style="position:relative" data-uid="${img.id}">
+      <img src="${src}" class="img-thumb" onclick="openLightbox(this.src)" alt="">
+      ${badge}
+      <button onclick="removeFormImage(${JSON.stringify(img.id)})" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center">&times;</button>
     </div>`;
   }).join('');
 }
 
-// ══════════════════════════════════════════════
-// LIGHTBOX
-// ══════════════════════════════════════════════
+// ── LIGHTBOX ──────────────────────────────────
 function openLightbox(url) { document.getElementById('lightboxImg').src=url; document.getElementById('lightbox').classList.add('open'); }
-function closeLightbox()   { document.getElementById('lightbox').classList.remove('open'); }
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
 
-// ══════════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════════
-let toastTimer;
+// ── TOAST ─────────────────────────────────────
+let _tt;
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 2800);
+  clearTimeout(_tt); _tt = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// ══════════════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════════════
-function escHtml(s) {
+// ── UTILS ─────────────────────────────────────
+function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
