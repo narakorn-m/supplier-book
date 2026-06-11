@@ -273,8 +273,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  try { const c = localStorage.getItem(DATA_KEY); if (c) suppliers = JSON.parse(c); } catch(e){}
-  renderList();
+  // โหลด cache ก่อน แสดงผลทันที
+  try {
+    const c = localStorage.getItem(DATA_KEY);
+    if (c) {
+      const parsed = JSON.parse(c);
+      if (Array.isArray(parsed)) suppliers = parsed;
+    }
+  } catch(e) { console.warn('cache parse error', e); }
+  renderList(); // แสดง cache ก่อน
+  // ดึงข้อมูลล่าสุดจาก GAS ใน background
   loadSuppliers();
 });
 
@@ -286,12 +294,17 @@ async function loadSuppliers() {
   try {
     const res = await fetch(getGasUrl() + '?action=getAll');
     const data = await res.json();
-    if (Array.isArray(data.suppliers)) {
-      suppliers = data.suppliers;
-      localStorage.setItem(DATA_KEY, JSON.stringify(suppliers));
+    if (Array.isArray(data.suppliers) && data.suppliers.length > 0) {
+      // MERGE: ถ้า GAS มีข้อมูลมากกว่า cache ให้ใช้ GAS
+      // ถ้า GAS มีน้อยกว่า (เช่น Sheet ว่าง) ให้คง cache ไว้
+      if (data.suppliers.length >= suppliers.length) {
+        suppliers = data.suppliers;
+        localStorage.setItem(DATA_KEY, JSON.stringify(suppliers));
+      }
       renderList();
     }
-  } catch(e) { console.warn('offline'); }
+    // ถ้า GAS ส่ง suppliers = [] → ไม่ทำอะไร (คง cache ไว้)
+  } catch(e) { console.warn('offline, using cache'); }
 }
 
 async function testConnection() {
@@ -347,7 +360,7 @@ function renderList() {
 
   const bar = document.getElementById('filterBar');
   bar.innerHTML = `<div class="chip ${!activeFilter?'active':''}" onclick="setFilter(this,'')">ทั้งหมด</div>`;
-  [...cats].forEach(c => bar.innerHTML += `<div class="chip ${activeFilter===c?'active':''}" onclick="setFilter(this,${JSON.stringify(c)})">${esc(c)}</div>`);
+  [...cats].forEach(c => bar.innerHTML += '<div class="chip ' + (activeFilter===c?'active':'') + '" data-cat="' + esc(c) + '" onclick="setFilterSafe(this)">' + esc(c) + '</div>');
 
   const el = document.getElementById('supplierList');
   if (!filtered.length) {
